@@ -1,33 +1,36 @@
+// main.c
 #include <stdio.h>
 #include <stdlib.h>
 #include "statistics.h"
+#include <gsl/gsl_statistics.h> // Include GSL header
 
 int main() {
-    // Create an array of hundred float elements using calloc
-    float *arr = (float *)calloc(100, sizeof(float));
+    // Create an array of 100 double elements using calloc
+    double* myArray = (double*)calloc(100, sizeof(double));
 
-    // Print and assign values to the elements of the array
-    for (int i = 0; i < 100; ++i) {
-        // Print value before assignment
-        printf("Before assignment, arr[%d]: %.2f\n", i, arr[i]);
-
-        // Assign values to the elements of the array
-        arr[i] = (i+1)*(i+1);
-
-        // Print value after assignment
-        printf("After assignment, arr[%d]: %.2f\n", i, arr[i]);
+    // Print and assign squares to the elements of the array
+    for (int i = 0; i < 100; i++) {
+        myArray[i] = (i+1) *(i+1);  // Assign squares
     }
 
-    // Calculate mean and variance using the function
-    float result[2];
-    calculateMeanAndVariance(arr, 100, result);
+    // Calculate mean and variance using the GSL function
+    double* result_gsl = calculateMeanAndVariance(myArray, 100);
 
-    // Print mean and variance to the terminal
-    printf("\nMean: %.2f\n", result[0]);
-    printf("Variance: %.2f\n", result[1]);
+    // Print mean and variance using GSL functions
+    printf("Mean (GSL): %f\n", result_gsl[0]);
+    printf("Variance (GSL): %f\n", result_gsl[1]);
+
+    // Calculate mean and variance using the loop-based function
+    double* result_loop = calculateMeanAndVariance(myArray, 100);
+
+    // Print mean and variance using loop-based functions
+    printf("Mean (Loop): %f\n", result_loop[0]);
+    printf("Variance (Loop): %f\n", result_loop[1]);
 
     // Free the allocated memory
-    free(arr);
+    free(myArray);
+    free(result_gsl);
+    free(result_loop);
 
     return 0;
 }
